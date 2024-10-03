@@ -1,15 +1,11 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 def get_google_data(keyword):
     url = f"https://www.google.com/search?q={keyword}"
-    # Chrome 옵션 설정
-    options = Options()
-    options.add_argument('--headless')  # 브라우저를 숨기고 백그라운드에서 실행
-
     # 크롬 브라우저가 열린다. 이 때, 동적인 내용들이 모두 채워짐
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome()
+    # driver = webdriver.Chrome()
     driver.get(url)
 
     # 열린 페이지 소스를 받아옴
