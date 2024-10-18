@@ -2,10 +2,22 @@ from django.shortcuts import render, redirect, get_object_or_404, get_list_or_40
 from .models import Board, Comment
 from .forms import BoardForm, CommentForm
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+
 @require_http_methods(["GET"])
 def index(request):
+    # 어느 것이 더 좋은 방법일까 ? or 언제 사용해야 할까?
+    # get_list_or_404: 데이터가 없을 때 404 에러를 띄워준다.
+    # - 데이터가 없어도 화면측에서 사용자에게 알림을 줄 수 있다면 사용가능
+    # - 프론트 측(django 에선 template)에서 404 error 를 처리해줬다면 사용
+    # boards = get_list_or_404()
+
+    # 에러를 안띄웠다면, order_by 적용
+    # boards = boards.order_by('-created_at')
+
+    # 기본 코드
+    # django ORM -> SQL 변환
     boards = Board.objects.all().order_by('-created_at')
     context = {
         'boards': boards
@@ -46,6 +58,7 @@ def update(request, pk):
     }        
     return render(request, 'boards/update.html', context)
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def create(request):
     if request.method == 'POST':
